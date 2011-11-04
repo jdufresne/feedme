@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Feed: {{ feed.title }}{% endblock %}
+{% block title %}{{ feed.title }}{% endblock %}
 
 {% block body %}
-    <h1>Feed: {{ feed.title }}</h1>
+    <h1>{{ feed.title }}</h1>
 
     <form method="post" action="{% url refresh feed_id=feed.id %}">
       {% csrf_token %}
       <input type="submit" value="Refresh" />
     </form>
 
-    {% for item in feed.items %}
-        <h2>item.title</h2>
-        <p>item.content</p>
+    {% for entry in feed.entries.all %}
+        <h2>{{ entry.title }}</h2>
+        <h3>{{ entry.author }}</h3>
+        <p>{{ entry.content }}</p>
     {% endfor %}
 {% endblock %}
