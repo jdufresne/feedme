@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Import OPML{% endblock %}
+
+{% block body %}
+  <h1>Import OPML</h1>
+  <form method="post" action="{% url import %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div>
+      {{ form.file.label_tag }}
+      {{ form.file }}
+    </div>
+    <input type="submit" value="Import" />
+  </form>
+{% endblock %}

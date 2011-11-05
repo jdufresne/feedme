@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user }}’s feeds{% endblock %}
+
+{% block body %}
+<h1>{{ user }}’s feeds</h1>
+<ul>
+  <li><a href="{% url import %}">import OPML</a></li>
+</ul>
+
+<ul>
+  {% for feed in user.feeds.all %}
+    <li>{{ feed.title }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,9 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Feed(models.Model):
-    uri = models.CharField(max_length=255)
+    uri = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255, blank=True)
+    users = models.ManyToManyField(User, related_name='feeds')
 
     def clean(self):
         if not self.title:
