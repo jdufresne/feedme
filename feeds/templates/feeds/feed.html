@@ -3,16 +3,16 @@
 {% block title %}{{ feed.title }}{% endblock %}
 
 {% block body %}
-    <h1>{{ feed.title }}</h1>
+    <h1>{{ feed }}</h1>
 
-    <form method="post" action="{% url refresh feed_id=feed.id %}">
+    <form method="post" action="{% url feed feed_id=feed.id %}">
       {% csrf_token %}
       <input type="submit" value="Refresh" />
     </form>
 
     {% for entry in feed.entries.all %}
-        <h2>{{ entry.title }}</h2>
+        <h2>{{ entry }}</h2>
         <h3>{{ entry.author }}</h3>
-        <p>{{ entry.content }}</p>
+        {{ entry.content|safe }}
     {% endfor %}
 {% endblock %}

@@ -10,7 +10,7 @@
 
 <ul>
   {% for feed in user.feeds.all %}
-    <li>{{ feed.title }}</li>
+    <li><a href="{% url feed feed_id=feed.id %}">{{ feed }}</a></li>
   {% endfor %}
 </ul>
 {% endblock %}
