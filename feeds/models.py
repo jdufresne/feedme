@@ -24,12 +24,14 @@ class Feed(models.Model):
         self.save()
 
         for parsed_entry in parsed.entries:
+            uuid = getattr(parsed_entry, 'id', parsed_entry.link)
+
             try:
-                entry = Entry.objects.get(uuid=parsed_entry.id)
+                entry = Entry.objects.get(uuid=uuid)
             except Entry.DoesNotExist:
                 entry = Entry()
                 entry.feed = self
-                entry.uuid = parsed_entry.id
+                entry.uuid = uuid
 
             entry.link = parsed_entry.link
             entry.title = parsed_entry.title
