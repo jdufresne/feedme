@@ -28,18 +28,16 @@ class Feed(models.Model):
                 entry = Entry.objects.get(uuid=parsed_entry.id)
             except Entry.DoesNotExist:
                 entry = Entry()
-	            entry.feed = self
+                entry.feed = self
+                entry.uuid = parsed_entry.id
 
-            entry.uuid = parsed_entry.id
             entry.link = parsed_entry.link
             entry.title = parsed_entry.title
-            entry.author = parsed_entry.author
-
+            entry.author = getattr(parsed_entry, 'author', None)
             if hasattr(parsed_entry, 'content'):
                 entry.content = parsed_entry.content[0].value
             else:
-                entry.content = parsed_entry.summary
-
+                entry.content = getattr(parsed_entry, 'summary', None)
             entry.save()
 
 
@@ -48,8 +46,8 @@ class Entry(models.Model):
     uuid = models.CharField(max_length=255, unique=True)
     link = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
-    content = models.TextField()
+    author = models.CharField(max_length=255, null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return self.title

@@ -3,16 +3,20 @@
 {% block title %}{{ feed.title }}{% endblock %}
 
 {% block body %}
-    <h1>{{ feed }}</h1>
+  <h1>{{ feed }}</h1>
 
-    <form method="post" action="{% url feed feed_id=feed.id %}">
-      {% csrf_token %}
-      <input type="submit" value="Refresh" />
-    </form>
+  <form method="post" action="{% url feed feed_id=feed.id %}">
+    {% csrf_token %}
+    <input type="submit" value="Refresh" />
+  </form>
 
-    {% for entry in feed.entries.all %}
-        <h2>{{ entry }}</h2>
-        <h3>{{ entry.author }}</h3>
-        {{ entry.content|safe }}
-    {% endfor %}
+  {% for entry in feed.entries.all %}
+    <h2><a href="{{ entry.link }}">{{ entry }}</a></h2>
+    {% if entry.author %}
+      <h3>{{ entry.author }}</h3>
+    {% endif %}
+    {% if entry.content %}
+      {{ entry.content|safe }}
+    {% endif %}
+  {% endfor %}
 {% endblock %}
