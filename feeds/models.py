@@ -8,6 +8,11 @@ class Feed(models.Model):
     title = models.CharField(max_length=255, blank=True)
     users = models.ManyToManyField(User, related_name='feeds')
 
+    class Meta:
+        ordering = (
+            'title',
+        )
+
     def __unicode__(self):
         return self.title
 

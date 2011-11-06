@@ -3,11 +3,13 @@
 {% block title %}{{ user }}’s feeds{% endblock %}
 
 {% block body %}
-<h1>{{ user }}’s feeds</h1>
-<ul>
-  <li><a href="{% url import %}">import OPML</a></li>
-</ul>
+<nav>
+  <ul>
+    <li><a href="{% url import %}">Import OPML</a></li>
+  </ul>
+</nav>
 
+<h2>Subscriptions</h2>
 <ul>
   {% for feed in user.feeds.all %}
     <li><a href="{% url feed feed_id=feed.id %}">{{ feed }}</a></li>

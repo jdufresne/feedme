@@ -5,10 +5,31 @@
 {% block body %}
   <h1>{{ feed }}</h1>
 
-  <form method="post" action="{% url feed feed_id=feed.id %}">
-    {% csrf_token %}
-    <input type="submit" value="Refresh" />
-  </form>
+  <ul>
+    <li>
+      <form method="post" action="{% url feed feed_id=feed.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Refresh" />
+      </form>
+    </li>
+    {% if user.is_authenticated %}
+      {% if subscribed %}
+        <li>
+          <form method="post" action="{% url unsubscribe feed_id=feed.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Unsubscribe" />
+          </form>
+        </li>
+      {% else %}
+        <li>
+          <form method="post" action="{% url subscribe feed_id=feed.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Subscribe" />
+          </form>
+        </li>
+      {% endif %}
+    {% endif %}
+  </ul>
 
   {% for entry in feed.entries.all %}
     <h2><a href="{{ entry.link }}">{{ entry }}</a></h2>

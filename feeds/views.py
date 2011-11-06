@@ -6,6 +6,18 @@ from feedme.feeds.models import Feed, Entry
 from feedme.feeds.forms import ImportForm
 
 
+def feed(request, feed_id):
+    feed = get_object_or_404(Feed, pk=feed_id)
+    if request.method == 'POST':
+        feed.refresh()
+        return redirect('feed', feed_id=feed.id)
+    else:
+        return render(request, 'feeds/feed.html', {
+            'feed': feed,
+            'subscribed': request.user.feeds.filter(pk=feed.id).exists(),
+        })
+
+
 @login_required
 def home(request):
     return render(request, 'feeds/home.html', {
@@ -13,13 +25,20 @@ def home(request):
     })
 
 
-def feed(request, feed_id):
+@login_required
+@require_POST
+def subscribe(request, feed_id):
     feed = get_object_or_404(Feed, pk=feed_id)
-    if request.method == 'POST':
-        feed.refresh()
-        return redirect('feed', feed_id=feed.id)
-    else:
-        return render(request, 'feeds/feed.html', {'feed': feed})
+    request.user.feeds.add(feed)
+    return redirect('feed', feed_id=feed.id)
+
+
+@login_required
+@require_POST
+def unsubscribe(request, feed_id):
+    feed = get_object_or_404(Feed, pk=feed_id)
+    request.user.feeds.remove(feed)
+    return redirect('feed', feed_id=feed.id)
 
 
 @login_required
@@ -29,11 +48,14 @@ def import_opml(request):
         if form.is_valid():
             dom = xml.etree.ElementTree.parse(request.FILES['file'])
             for el in dom.iter('outline'):
-                feed = Feed()
-                feed.uri = el.attrib['xmlUrl']
-                feed.title = el.attrib['title']
-                feed.save()
-                feed.users.add(request.user)
+                try:
+                    feed = Feed.objects.get(uri=el.attrib['xmlUrl'])
+                except Feed.DoesNotExist:
+                    feed = Feed()
+                    feed.uri = el.attrib['xmlUrl']
+                    feed.title = el.attrib['title']
+                    feed.save()
+                request.user.feeds.add(feed)
             return redirect('home')
     else:
         form = ImportForm()
