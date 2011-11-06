@@ -1,3 +1,5 @@
+import time
+import datetime
 import feedparser
 from django.db import models
 from django.contrib.auth.models import User
@@ -9,9 +11,7 @@ class Feed(models.Model):
     users = models.ManyToManyField(User, related_name='feeds')
 
     class Meta:
-        ordering = (
-            'title',
-        )
+        ordering = ('title',)
 
     def __unicode__(self):
         return self.title
@@ -41,10 +41,15 @@ class Feed(models.Model):
             entry.link = parsed_entry.link
             entry.title = parsed_entry.title
             entry.author = getattr(parsed_entry, 'author', None)
+
+            timestamp = time.mktime(parsed_entry.updated_parsed)
+            entry.published = datetime.datetime.fromtimestamp(timestamp)
+
             if hasattr(parsed_entry, 'content'):
                 entry.content = parsed_entry.content[0].value
-            else:
-                entry.content = getattr(parsed_entry, 'summary', None)
+            elif hasattr(parsed_entry, 'summary'):
+                entry.content = parsed_entry.summary
+
             entry.save()
 
 
@@ -54,7 +59,11 @@ class Entry(models.Model):
     link = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255, null=True, blank=True)
+    published = models.DateTimeField()
     content = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('-published',)
 
     def __unicode__(self):
         return self.title
