@@ -1,4 +1,3 @@
-import xml.etree.ElementTree
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
@@ -63,14 +62,14 @@ def import_opml(request):
     if request.method == 'POST':
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
-            dom = xml.etree.ElementTree.parse(request.FILES['file'])
-            for el in dom.iter('outline'):
+            doc = form.cleaned_data['opml']
+            for el in doc.iterfind('//outline[@type="rss"]'):
                 try:
                     feed = Feed.objects.get(uri=el.attrib['xmlUrl'])
                 except Feed.DoesNotExist:
                     feed = Feed()
                     feed.uri = el.attrib['xmlUrl']
-                    feed.title = el.attrib['title']
+                    feed.title = el.attrib['text']
                     feed.save()
                 request.user.feeds.add(feed)
             return redirect('home')
