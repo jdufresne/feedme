@@ -9,7 +9,9 @@
     <li>
       <form method="post" action="{% url feed feed_id=feed.id %}">
         {% csrf_token %}
-        <input type="submit" value="Refresh" />
+        <fieldset>
+          <input type="submit" value="Refresh" />
+        </fieldset>
       </form>
     </li>
     {% if user.is_authenticated %}
@@ -17,14 +19,18 @@
         <li>
           <form method="post" action="{% url unsubscribe feed_id=feed.id %}">
             {% csrf_token %}
-            <input type="submit" value="Unsubscribe" />
+            <fieldset>
+              <input type="submit" value="Unsubscribe" />
+            </fieldset>
           </form>
         </li>
       {% else %}
         <li>
           <form method="post" action="{% url subscribe feed_id=feed.id %}">
             {% csrf_token %}
-            <input type="submit" value="Subscribe" />
+            <fieldset>
+              <input type="submit" value="Subscribe" />
+            </fieldset>
           </form>
         </li>
       {% endif %}
@@ -37,6 +43,14 @@
       <h3>{{ entry.author }}</h3>
     {% endif %}
     <h4>{{ entry.published }}</h4>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url share entry_id=entry.id %}">
+        {% csrf_token %}
+        <fieldset>
+          <input type="submit" value="Share" />
+        </fieldset>
+      </form>
+    {% endif %}
     {% if entry.content %}
       {{ entry.content|safe }}
     {% endif %}

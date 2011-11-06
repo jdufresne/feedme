@@ -23,7 +23,7 @@ class Feed(models.Model):
         super(Feed, self).clean()
 
     def refresh(self):
-		# Used to unescape html entities in titles
+        # Used to unescape html entities in titles
         html_parser = HTMLParser.HTMLParser()
 
         parsed = feedparser.parse(self.uri)

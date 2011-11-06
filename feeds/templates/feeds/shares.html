@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user }}’s shares{% endblock %}
+
+{% block body %}
+  <h1>Shares</h1>
+
+  {% for entry in entries %}
+    <h2><a href="{{ entry.link }}">{{ entry }}</a></h2>
+    {% if entry.author %}
+      <h3>{{ entry.author }}</h3>
+    {% endif %}
+    <h4>{{ entry.published }}</h4>
+    {% if entry.content %}
+      {{ entry.content|safe }}
+    {% endif %}
+  {% endfor %}
+{% endblock %}

@@ -1,7 +1,8 @@
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from feedme.feeds.models import Feed, Entry
+from django.contrib.auth.models import User
+from feedme.feeds.models import Feed, Entry, UserEntry
 from feedme.feeds.forms import ImportForm
 
 
@@ -11,11 +12,11 @@ def feed(request, feed_id, unread=True):
         feed.refresh()
         return redirect('feed', feed_id=feed.id)
     else:
-        entries = feed.entries.all()
+        entries = feed.entries
         if request.user.is_authenticated():
             subscribed = request.user.feeds.filter(pk=feed.id).exists()
             if unread:
-                entries = entries.exclude(pk__in=request.user.entries.all())
+                entries = entries.exclude(userentry__user=request.user)
         else:
             subscribed = None
 
@@ -26,11 +27,16 @@ def feed(request, feed_id, unread=True):
         })
 
 
+def shares(request, unred=True):
+    entries = Entry.objects.filter(userentry__shared=True)
+    if request.user.is_authenticated():
+        entries = entries.exclude(userentry__user=request.user)
+    return render(request, 'feeds/shares.html', {'entries': entries})
+
+
 @login_required
 def home(request):
-    return render(request, 'feeds/home.html', {
-        'feeds': request.user.feeds.all(),
-    })
+    return render(request, 'feeds/home.html', {'feeds': request.user.feeds})
 
 
 @login_required
@@ -54,6 +60,21 @@ def unsubscribe(request, feed_id):
 def read(request, entry_id):
     entry = get_object_or_404(Entry, pk=entry_id)
     request.user.entries.add(entry)
+    return redirect('feed', feed_id=entry.feed.id)
+
+
+@login_required
+@require_POST
+def share(request, entry_id):
+    entry = get_object_or_404(Entry, pk=entry_id)
+    try:
+        user_entry = UserEntry.objects.get(user=request.user, entry=entry)
+    except UserEntry.DoesNotExist:
+        user_entry = UserEntry()
+        user_entry.user = request.user
+        user_entry.entry = entry
+    user_entry.shared = True
+    user_entry.save()
     return redirect('feed', feed_id=entry.feed.id)
 
 
