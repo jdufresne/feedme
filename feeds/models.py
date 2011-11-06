@@ -75,4 +75,5 @@ class Entry(models.Model):
 class UserEntry(models.Model):
     user = models.ForeignKey(User)
     entry = models.ForeignKey('Entry')
+    bookmarked = models.BooleanField(default=False)
     shared = models.BooleanField(default=False)
