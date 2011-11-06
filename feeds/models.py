@@ -1,5 +1,6 @@
 import time
 import datetime
+import HTMLParser
 import feedparser
 from django.db import models
 from django.contrib.auth.models import User
@@ -22,10 +23,12 @@ class Feed(models.Model):
         super(Feed, self).clean()
 
     def refresh(self):
-        parsed = feedparser.parse(self.uri)
+		# Used to unescape html entities in titles
+        html_parser = HTMLParser.HTMLParser()
 
+        parsed = feedparser.parse(self.uri)
         parsed_feed = parsed.feed
-        self.title = parsed_feed.title
+        self.title = html_parser.unescape(parsed_feed.title)
         self.save()
 
         for parsed_entry in parsed.entries:
@@ -39,7 +42,7 @@ class Feed(models.Model):
                 entry.uuid = uuid
 
             entry.link = parsed_entry.link
-            entry.title = parsed_entry.title
+            entry.title = html_parser.unescape(parsed_entry.title)
             entry.author = getattr(parsed_entry, 'author', None)
 
             timestamp = time.mktime(parsed_entry.updated_parsed)
