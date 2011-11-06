@@ -61,9 +61,18 @@ class Entry(models.Model):
     author = models.CharField(max_length=255, null=True, blank=True)
     published = models.DateTimeField()
     content = models.TextField(null=True, blank=True)
+    users = models.ManyToManyField(User,
+                                   related_name='entries',
+                                   through='UserEntry')
 
     class Meta:
         ordering = ('-published',)
 
     def __unicode__(self):
         return self.title
+
+
+class UserEntry(models.Model):
+    user = models.ForeignKey(User)
+    entry = models.ForeignKey('Entry')
+    shared = models.BooleanField(default=False)

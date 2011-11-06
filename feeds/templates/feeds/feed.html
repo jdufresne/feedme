@@ -31,7 +31,7 @@
     {% endif %}
   </ul>
 
-  {% for entry in feed.entries.all %}
+  {% for entry in entries %}
     <h2><a href="{{ entry.link }}">{{ entry }}</a></h2>
     {% if entry.author %}
       <h3>{{ entry.author }}</h3>
