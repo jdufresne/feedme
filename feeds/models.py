@@ -57,7 +57,7 @@ class Feed(models.Model):
 
 
 class Entry(models.Model):
-    feed = models.ForeignKey('Feed', related_name='entries')
+    feed = models.ForeignKey('Feed', related_name='entries', null=True, blank=True)
     uuid = models.CharField(max_length=255, unique=True)
     link = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
