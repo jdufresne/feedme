@@ -1,58 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'feeds/base.html' %}
 
 {% block title %}{{ feed }}{% endblock %}
 
-{% block body %}
-  <h1>{{ feed }}</h1>
+{% block content %}
+<h1>{{ feed }}</h1>
+<form method="post" action="{% url feed feed_id=feed.id %}">
+  {% csrf_token %}
+  <fieldset>
+    <input type="submit" value="Refresh" />
+  </fieldset>
+</form>
 
-  <ul>
-    <li>
-      <form method="post" action="{% url feed feed_id=feed.id %}">
-        {% csrf_token %}
-        <fieldset>
-          <input type="submit" value="Refresh" />
-        </fieldset>
-      </form>
-    </li>
-    {% if user.is_authenticated %}
-      {% if subscribed %}
-        <li>
-          <form method="post" action="{% url unsubscribe feed_id=feed.id %}">
-            {% csrf_token %}
-            <fieldset>
-              <input type="submit" value="Unsubscribe" />
-            </fieldset>
-          </form>
-        </li>
-      {% else %}
-        <li>
-          <form method="post" action="{% url subscribe feed_id=feed.id %}">
-            {% csrf_token %}
-            <fieldset>
-              <input type="submit" value="Subscribe" />
-            </fieldset>
-          </form>
-        </li>
-      {% endif %}
-    {% endif %}
-  </ul>
+{% for entry in entries %}
+  <div class="article">
+    <div class="article-header">
+      <h1><a href="{{ entry.link }}">{{ entry }}</a></h1>
+      <p>
+        Published {{ entry.published}}
+        {% if entry.author %}by {{ entry.author }}{% endif %}
+      </p>
+    </div>
 
-  {% for entry in entries %}
-    <h2><a href="{{ entry.link }}">{{ entry }}</a></h2>
-    {% if entry.author %}
-      <h3>{{ entry.author }}</h3>
-    {% endif %}
-    <h4>{{ entry.published }}</h4>
+    {% if entry.content %}{{ entry.content|safe }}{% endif %}
+
     {% if user.is_authenticated %}
-      <form method="post" action="{% url share entry_id=entry.id %}">
-        {% csrf_token %}
-        <fieldset>
+      <div class="article-footer">
+        <form method="post" action="{% url share entry_id=entry.id %}">
+          {% csrf_token %}
+          <fieldset>
           <input type="submit" value="Share" />
         </fieldset>
-      </form>
+        </form>
+      </div>
     {% endif %}
-    {% if entry.content %}
-      {{ entry.content|safe }}
-    {% endif %}
-  {% endfor %}
+  </div>
+{% endfor %}
 {% endblock %}

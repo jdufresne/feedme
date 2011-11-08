@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<ul id="user-nav">
+  {% if user.is_authenticated %}
+    <li>{{ user }}</li>
+    <li><a href="{% url import %}">Import OPML</a></li>
+    <li><a href="{% url django.contrib.auth.views.logout %}">Sign out</a></li>
+  {% else %}
+    <li><a href="{% url django.contrib.auth.views.login %}">Sign in</a></li>
+  {% endif %}
+</ul>
+
+<ul id="feed-nav">
+  <li><a href="{% url home %}">Home</a></li>
+  {% if user.is_authenticated %}
+    <li>Bookmarked items</li>
+  {% endif %}
+  <li>Shared items</li>
+  {% if user.is_authenticated %}
+    <li class="list-heading">Subscriptions</li>
+    <li>
+      <ul id="feeds">
+        {% for feed in user.feeds.all %}
+          <li>
+            <a class="feed" href="{% url feed feed_id=feed.id %}">
+              {{ feed }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+</ul>
+
+<div id="content">
+  {% block content %}{% endblock %}
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-  <h1>Login</h1>
+  <h1>Sign in</h1>
   <form method="post" action="{% url django.contrib.auth.views.login %}">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}" />

@@ -16,10 +16,11 @@ def feed(request, feed_id, unread=True):
     else:
         entries = feed.entries
         if request.user.is_authenticated():
-            subscribed = request.user.feeds.filter(pk=feed.id).exists()
             if unread:
                 entries = entries.exclude(userentry__user=request.user)
+            subscribed = request.user.feeds.filter(pk=feed.id).exists()
         else:
+            entries = entries.all()
             subscribed = None
 
         return render(request, 'feeds/feed.html', {
@@ -36,9 +37,8 @@ def shares(request, unred=True):
     return render(request, 'feeds/shares.html', {'entries': entries})
 
 
-@login_required
 def home(request):
-    return render(request, 'feeds/home.html', {'feeds': request.user.feeds})
+    return render(request, 'feeds/home.html')
 
 
 @login_required

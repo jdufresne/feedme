@@ -1,16 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'feeds/base.html' %}
 
 {% block title %}Import OPML{% endblock %}
 
-{% block body %}
-  <h1>Import OPML</h1>
-  <form method="post" action="{% url import %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <fieldset>
-      {{ form.opml.errors }}
-      {{ form.opml.label_tag }}
-      {{ form.opml }}
-      <input type="submit" value="Import" />
-    </fieldset>
-  </form>
+{% block content %}
+<h1>Import OPML</h1>
+<form method="post" action="{% url import %}" enctype="multipart/form-data">
+  {% csrf_token %}
+  <fieldset>
+    {{ form.opml.errors }}
+    {{ form.opml.label_tag }}
+    {{ form.opml }}
+    <input type="submit" value="Import" />
+  </fieldset>
+</form>
 {% endblock %}

@@ -1,19 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'feeds/base.html' %}
 
-{% block title %}{{ user }}’s feeds{% endblock %}
+{% block title %}{{ user }}’s home{% endblock %}
 
-{% block body %}
-<nav>
-  <ul>
-    <li><a href="{% url import %}">Import OPML</a></li>
-    <li><a href="{% url shares %}">Shares</a></li>
-  </ul>
-</nav>
-
-<h2>Subscriptions</h2>
-<ul>
-  {% for feed in user.feeds.all %}
-    <li><a href="{% url feed feed_id=feed.id %}">{{ feed }}</a></li>
-  {% endfor %}
-</ul>
+{% block content %}
+<h1>Home</h1>
 {% endblock %}
