@@ -1,7 +1,9 @@
 {% extends 'feeds/base.html' %}
 
-{% block title %}{{ user }}’s home{% endblock %}
+{% block title %}{{ user.username }}’s home{% endblock %}
 
 {% block content %}
 <h1>Home</h1>
+Drag this to your bookmarks toolbar to share a url
+<a class="button" href="{{ bm_url|safe|escape }}">Share in Feedme</a>
 {% endblock %}
