@@ -12,6 +12,4 @@ urlpatterns = patterns(
     url(r'^subscribe/(?P<feed_id>\d+)/$', 'subscribe', name='subscribe'),
     url(r'^unsubscribe/(?P<feed_id>\d+)/$', 'unsubscribe', name='unsubscribe'),
     url(r'^share/(?P<entry_id>\d+)/$', 'share', name='share'),
-	
-	url(r'^external_share/$','external_share', name='external_share')
 )

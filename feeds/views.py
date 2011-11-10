@@ -1,12 +1,10 @@
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
 from feedme.feeds.models import Feed, Entry, UserEntry
 from feedme.feeds.forms import ImportForm
-import datetime
+
 
 def feed(request, feed_id, unread=True):
     feed = get_object_or_404(Feed, pk=feed_id)
@@ -77,37 +75,8 @@ def share(request, entry_id):
         user_entry.entry = entry
     user_entry.shared = True
     user_entry.save()
-    print 'sharing'
     return redirect('feed', feed_id=entry.feed.id)
 
-@csrf_exempt
-def external_share(request):
-    if request.method == 'POST':
-        url = request.POST['url']
-        entries = Entry.objects.filter(link=url)
-        if not entries:
-            entry = Entry()
-            entry.uuid = url
-            entry.link = url
-            entry.feed = None
-            entry.published = datetime.date.today()
-            entry.save()
-        #try:
-        #    user_entry = UserEntry.objects.get(user=user, entry=entry)
-        #except UserEntry.DoesNotExist:
-        #    user_entry = UserEntry()
-        #    user_entry.user = user
-        #    user_entry.entry = entry
-        #    user_entry.shared = True
-        #    user_entry.save()
-        return HttpResponse("saved")
-    else:
-        return HttpResponse(status=404)
-
-        
-def get_new_or_existing_user_entry(user, entry):
-    
-    
 
 @login_required
 def import_opml(request):
