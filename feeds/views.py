@@ -2,6 +2,7 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from feedme.ajax import json_response
 from feedme.feeds.models import Feed, Entry, UserEntry
 from feedme.feeds.forms import ImportForm
 
@@ -15,7 +16,8 @@ def feed(request, feed_id, unread=True):
         entries = feed.entries
         if request.user.is_authenticated():
             if unread:
-                entries = entries.exclude(userentry__user=request.user)
+                entries = entries.exclude(userentry__user=request.user,
+                                          userentry__read=True)
             subscribed = request.user.feeds.filter(pk=feed.id).exists()
         else:
             entries = entries.all()
@@ -59,7 +61,12 @@ def unsubscribe(request, feed_id):
 @require_POST
 def read(request, entry_id):
     entry = get_object_or_404(Entry, pk=entry_id)
-    request.user.entries.add(entry)
+    user_entry, created = UserEntry.objects.get_or_create(user=request.user,
+                                                          entry=entry)
+    user_entry.read = True
+    user_entry.save()
+    if request.is_ajax():
+        return json_response({'success': True})
     return redirect('feed', feed_id=entry.feed.id)
 
 
@@ -67,14 +74,12 @@ def read(request, entry_id):
 @require_POST
 def share(request, entry_id):
     entry = get_object_or_404(Entry, pk=entry_id)
-    try:
-        user_entry = UserEntry.objects.get(user=request.user, entry=entry)
-    except UserEntry.DoesNotExist:
-        user_entry = UserEntry()
-        user_entry.user = request.user
-        user_entry.entry = entry
+    user_entry, created = UserEntry.objects.get_or_create(user=request.user,
+                                                          entry=entry)
     user_entry.shared = True
     user_entry.save()
+    if request.is_ajax():
+        return json_response({'success': True})
     return redirect('feed', feed_id=entry.feed.id)
 
 

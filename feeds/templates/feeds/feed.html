@@ -28,8 +28,15 @@
         <form method="post" action="{% url share entry_id=entry.id %}">
           {% csrf_token %}
           <fieldset>
-          <input type="submit" value="Share" />
-        </fieldset>
+            <input type="submit" value="Share" />
+          </fieldset>
+        </form>
+
+        <form class="read-form" method="post" action="{% url read entry_id=entry.id %}">
+          {% csrf_token %}
+          <fieldset>
+            <input type="submit" value="Read" />
+          </fieldset>
         </form>
       </div>
     {% endif %}

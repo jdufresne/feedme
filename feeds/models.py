@@ -78,6 +78,6 @@ class Entry(models.Model):
 class UserEntry(models.Model):
     user = models.ForeignKey(User)
     entry = models.ForeignKey('Entry')
-    read = models.BooleanField(default=True)
+    read = models.BooleanField(default=False)
     bookmarked = models.BooleanField(default=False)
     shared = models.BooleanField(default=False)
