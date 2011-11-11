@@ -6,6 +6,7 @@
 <h1>Register account</h1>
 <form method="post" action="{% url registration_register %}">
   {% csrf_token %}
+  {{ field.non_field_errors }}
 
   {% for field in form %}
     <fieldset>
@@ -16,7 +17,7 @@
   {% endfor %}
 
   <fieldset class="button-bar">
-    <input type="submit" value="Sign in" />
+    <input type="submit" value="Register" />
   </fieldset>
 </form>
 {% endblock %}
