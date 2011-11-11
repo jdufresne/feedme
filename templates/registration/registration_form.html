@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
 {% block title %}Register account{% endblock %}
 
-{% block body %}
+{% block content %}
 <h1>Register account</h1>
 <form method="post" action="{% url registration_register %}">
   {% csrf_token %}

@@ -39,104 +39,52 @@ fieldset {
     border: none;
 }
 
+label {
+    cursor: pointer;
+}
+
+input {
+    cursor: pointer;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 4px;
+    border: 1px solid #555753;
+    font-size: 1.5em;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #204a87;
+}
+
+input[type="submit"],
+input[type="button"] {
+    padding: 0.25em 0.5em;
+    border: 1px solid #555753;
+    background-color: #babdb6;
+    text-decoration: none;
+    font-size: 1.25em;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    border-color: #204a87;
+    background-color: #eeeeec;
+}
+
+.button-bar {
+    padding-top: 0.75em;
+    padding-right: 1em;
+    border-top: 1px dotted #2e3436;
+    text-align: right;
+}
+
 .errorlist {
     margin-bottom: 1em;
     padding: 0.5em 1em;
     border: 1px solid #cc0000;
     background: #eeeeec;
     color: #cc0000;
-}
-
-.list-heading {
-    margin: 0.5em 0 0.25em;
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-#user-nav {
-    margin-bottom: 1em;
-    background-color: #2e3436;
-    color: #babdb6;
-    text-align: right;
-}
-
-#user-nav li {
-    display: inline;
-}
-
-#user-nav a {
-    display: inline-block;
-    padding: 0.5em;
-    color: #babdb6;
-}
-
-#user-nav a:hover {
-    color: #eeeeec;
-}
-
-#user-nav a:active {
-    color: #eeeeec;
-    border-bottom: 1px solid #eeeeec;
-}
-
-#feed-nav {
-    float: left;
-    margin-left: 4px;
-    width: 248px;
-}
-
-#feeds {
-    margin-left: 1em;
-}
-
-.feed {
-    display: block;
-    padding: 0.1em 0 0.1em 20px;
-    background: url("../icons/feed.png");
-    background-position: left center;
-    background-repeat: no-repeat;
-}
-
-#content {
-    max-width: 70em;
-    margin-left: 252px;
-}
-
-.article {
-    padding: 1.25em 1em 1.25em;
-    border-bottom: 1px dotted #2e3436;
-    overflow: auto;
-}
-
-.selected {
-    border: 2px solid #2e3436;
-}
-
-.article ul {
-    margin: 1em 2em;
-    list-style-type: disc;
-}
-
-.article-header h1 {
-    margin: 0;
-    border: none;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.article-header p {
-    margin: 0;
-    color: #888a85;
-    font-size: 0.8em;
-}
-
-.article-header {
-    margin-bottom: 1em;
-}
-
-.article-footer {
-    margin-top: 1em;
-    padding: 0.25em 0.5em;
-    background-color: #eeeeec;
-    border: 1px solid #babdb6;
 }

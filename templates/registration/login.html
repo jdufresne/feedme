@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
 {% block title %}Sign in{% endblock %}
 
-{% block body %}
+{% block content %}
 <h1>Sign in</h1>
+
 <form method="post" action="{% url auth_login %}">
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next }}" />
@@ -22,7 +23,7 @@
   </fieldset>
 </form>
 
-<ul>
+<ul id="account-options">
   <li><a href="{% url auth_password_change %}">Recover password</a></li>
   <li><a href="{% url registration_register %}">Register account</a></li>
 </ul>

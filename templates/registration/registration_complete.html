@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
 {% block title %}Registration complete{% endblock %}
 
-{% block body %}
+{% block content %}
 <h1>Registration complete</h1>
 
-<p>Registration complete. You will receive an email with an activation
-link. Once activated you may <a href="{% url auth_login %}">sign
-in</a>.</p>
+<p>You will receive an email with an activation link. Once activated
+you may <a href="{% url auth_login %}">sign in</a>.</p>
 {% endblock %}

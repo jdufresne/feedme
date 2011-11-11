@@ -1,0 +1,29 @@
+label {
+    display: block;
+    font-size: 1.25em;
+}
+
+fieldset {
+    margin-bottom: 1em;
+}
+
+input[type="text"],
+input[type="password"] {
+    display: block;
+    width: 66%;
+}
+
+#content {
+    width: 600px;
+    margin: 6em auto;
+}
+
+#account-options {
+    margin-top: 1em;
+    text-align: center;
+}
+
+#account-options li {
+    display: inline;
+    margin-right: 1em;
+}

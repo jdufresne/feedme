@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ STATIC_URL }}styles/feeds.css" type="text/css" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ STATIC_URL }}scripts/feed.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block body %}
 <ul id="user-nav">
   {% if user.is_authenticated %}

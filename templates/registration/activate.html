@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'registration/base.html' %}
 
 {% block title %}Registration complete{% endblock %}
 
-{% block body %}
+{% block content %}
 <h1>Account activated</h1>
 
-<p>Account activated. <a href="{% url auth_login %}">Sign in</a>.</p>
+<p>You may now <a href="{% url auth_login %}">sign in</a>.</p>
 {% endblock %}
