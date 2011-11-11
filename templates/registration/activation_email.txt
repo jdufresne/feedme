@@ -1,0 +1,5 @@
+Your account was created successfully. You must activate your account
+within the next {{ expiration_days }} days. Activate your account
+using the following link:
+
+http://{{ site }}{% url registration_activate activation_key=activation_key %}

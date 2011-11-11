@@ -1,24 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Sign in{% endblock %}
 
 {% block body %}
-  <h1>Sign in</h1>
-  <form method="post" action="{% url django.contrib.auth.views.login %}">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ next }}" />
+<h1>Sign in</h1>
+<form method="post" action="{% url auth_login %}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}" />
 
-    <table>
-      <tr>
-        <th>{{ form.username.label_tag }}</th>
-        <td>{{ form.username }}</td>
-      </tr>
-      <tr>
-        <th>{{ form.password.label_tag }}</th>
-        <td>{{ form.password }}</td>
-      </tr>
-    </table>
+  {{ form.non_field_errors }}
 
-    <input type="submit" value="Login" />
-  </form>
+  {% for field in form %}
+    <fieldset>
+      {{ field.label_tag }}
+      {{ field }}
+    </fieldset>
+  {% endfor %}
+
+  <fieldset class="button-bar">
+    <input type="submit" value="Sign in" />
+  </fieldset>
+</form>
+
+<ul>
+  <li><a href="{% url auth_password_change %}">Recover password</a></li>
+  <li><a href="{% url registration_register %}">Register account</a></li>
+</ul>
 {% endblock %}

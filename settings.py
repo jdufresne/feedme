@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'registration',
     'feedme.feeds',
 )
 
@@ -137,3 +138,6 @@ LOGGING = {
         },
     }
 }
+
+# registration
+ACCOUNT_ACTIVATION_DAYS = 7

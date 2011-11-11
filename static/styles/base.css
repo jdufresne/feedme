@@ -39,6 +39,14 @@ fieldset {
     border: none;
 }
 
+.errorlist {
+    margin-bottom: 1em;
+    padding: 0.5em 1em;
+    border: 1px solid #cc0000;
+    background: #eeeeec;
+    color: #cc0000;
+}
+
 .list-heading {
     margin: 0.5em 0 0.25em;
     font-size: 1.2em;

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Register account{% endblock %}
+
+{% block body %}
+<h1>Register account</h1>
+<form method="post" action="{% url registration_register %}">
+  {% csrf_token %}
+
+  {% for field in form %}
+    <fieldset>
+      {{ field.label_tag }}
+      {{ field.errors }}
+      {{ field }}
+    </fieldset>
+  {% endfor %}
+
+  <fieldset class="button-bar">
+    <input type="submit" value="Sign in" />
+  </fieldset>
+</form>
+{% endblock %}
