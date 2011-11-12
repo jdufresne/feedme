@@ -1,5 +1,10 @@
-Your account was created successfully. You must activate your account
-within the next {{ expiration_days }} days. Activate your account
-using the following link:
+You’re receiving this e-mail because you registered an account at
+{{ site.name }}.
 
-http://{{ site }}{% url registration_activate activation_key=activation_key %}
+Please go to the following page to confirm your new account:
+
+http://{{ site.domain }}{% url registration_activate activation_key=activation_key %}
+
+Thanks for using our site!
+
+The {{ site.name }} team
