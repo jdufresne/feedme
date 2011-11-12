@@ -1,7 +1,3 @@
-import time
-import datetime
-import HTMLParser
-import feedparser
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -21,39 +17,6 @@ class Feed(models.Model):
         if not self.title:
             self.title = self.uri
         super(Feed, self).clean()
-
-    def refresh(self):
-        # Used to unescape html entities in titles
-        html_parser = HTMLParser.HTMLParser()
-
-        parsed = feedparser.parse(self.uri)
-        parsed_feed = parsed.feed
-        self.title = html_parser.unescape(parsed_feed.title)
-        self.save()
-
-        for parsed_entry in parsed.entries:
-            uuid = getattr(parsed_entry, 'id', parsed_entry.link)
-
-            try:
-                entry = Entry.objects.get(uuid=uuid)
-            except Entry.DoesNotExist:
-                entry = Entry()
-                entry.feed = self
-                entry.uuid = uuid
-
-            entry.link = parsed_entry.link
-            entry.title = html_parser.unescape(parsed_entry.title)
-            entry.author = getattr(parsed_entry, 'author', None)
-
-            timestamp = time.mktime(parsed_entry.updated_parsed)
-            entry.published = datetime.datetime.fromtimestamp(timestamp)
-
-            if hasattr(parsed_entry, 'content'):
-                entry.content = parsed_entry.content[0].value
-            elif hasattr(parsed_entry, 'summary'):
-                entry.content = parsed_entry.summary
-
-            entry.save()
 
 
 class Entry(models.Model):

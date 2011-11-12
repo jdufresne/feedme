@@ -113,6 +113,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'registration',
+    'djcelery',
     'feedme.feeds',
 )
 
@@ -141,3 +142,21 @@ LOGGING = {
 
 # registration
 ACCOUNT_ACTIVATION_DAYS = 7
+
+# celery
+import datetime
+import djcelery
+djcelery.setup_loader()
+
+BROKER_HOST = 'localhost'
+BROKER_PORT = 5672
+BROKER_USER = 'guest'
+BROKER_PASSWORD = 'guest'
+BROKER_VHOST = '/'
+
+CELERYBEAT_SCHEDULE = {
+    'refresh-feeds': {
+        'task': 'feedme.feeds.tasks.refresh_feeds',
+        'schedule': datetime.timedelta(minutes=30),
+    },
+}

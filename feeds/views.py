@@ -9,25 +9,21 @@ from feedme.feeds.forms import ImportForm
 
 def feed(request, feed_id, unread=True):
     feed = get_object_or_404(Feed, pk=feed_id)
-    if request.method == 'POST':
-        feed.refresh()
-        return redirect('feed', feed_id=feed.id)
+    entries = feed.entries
+    if request.user.is_authenticated():
+        if unread:
+            entries = entries.exclude(userentry__user=request.user,
+                                      userentry__read=True)
+        subscribed = request.user.feeds.filter(pk=feed.id).exists()
     else:
-        entries = feed.entries
-        if request.user.is_authenticated():
-            if unread:
-                entries = entries.exclude(userentry__user=request.user,
-                                          userentry__read=True)
-            subscribed = request.user.feeds.filter(pk=feed.id).exists()
-        else:
-            entries = entries.all()
-            subscribed = None
+        entries = entries.all()
+        subscribed = None
 
-        return render(request, 'feeds/feed.html', {
-            'feed': feed,
-            'entries': entries,
-            'subscribed': subscribed,
-        })
+    return render(request, 'feeds/feed.html', {
+        'feed': feed,
+        'entries': entries,
+        'subscribed': subscribed,
+    })
 
 
 def shares(request, unred=True):
