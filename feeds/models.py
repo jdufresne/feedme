@@ -30,10 +30,10 @@ class Feed(models.Model):
         if parsed['bozo']:
             return
         parsed_feed = parsed.feed
-        try:
-            self.title = html_parser.unescape(parsed_feed.title)
-        except:
-            self.title = parsed_feed.title
+        #try:
+        self.title = html_parser.unescape(parsed_feed.title)
+        #except:
+        #    self.title = parsed_feed.title
         self.save()
 
         for parsed_entry in parsed.entries:
