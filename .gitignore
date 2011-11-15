@@ -1,5 +1,8 @@
 *~
 *.pyc
 *.pyo
-*.sqlite3
 TAGS
+*.sqlite3
+celerybeat.pid
+celerybeat-schedule
+/settings.py

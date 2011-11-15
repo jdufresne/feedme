@@ -4,12 +4,6 @@
 
 {% block content %}
 <h1>{{ feed }}</h1>
-<form method="post" action="{% url feed feed_id=feed.id %}">
-  {% csrf_token %}
-  <fieldset>
-    <input type="submit" value="Refresh" />
-  </fieldset>
-</form>
 
 {% for entry in entries %}
   <div class="article">

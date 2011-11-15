@@ -1,7 +1,3 @@
-import time
-import datetime
-import HTMLParser
-import feedparser
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -59,6 +55,7 @@ class Feed(models.Model):
                 entry.content = parsed_entry.summary
 
             entry.save()
+
 
 
 class Entry(models.Model):
