@@ -17,4 +17,7 @@ urlpatterns = patterns(
     # User entry views
     url(r'^read/(?P<entry_id>\d+)/$', 'read', name='read'),
     url(r'^share/(?P<entry_id>\d+)/$', 'share', name='share'),
+    
+    url(r'^external_share/$','external_share', name='external_share'),
+    url(r'^bookmarklet/(?P<user_id>\d+)/$','bookmarklet', name='bookmarklet')
 )
