@@ -97,6 +97,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
+AUTH_PROFILE_MODULE = 'feedme.feeds.UserProfile'
+
 ROOT_URLCONF = 'feedme.urls'
 
 TEMPLATE_DIRS = (

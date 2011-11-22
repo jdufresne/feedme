@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 
 class Feed(models.Model):
@@ -45,8 +46,12 @@ class UserEntry(models.Model):
     shared = models.BooleanField(default=False)
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(User)
+    #friends = models.ForeignKey(User)
     
+    def __str__(self):  
+          return "%s's profile" % self.user
+      
     def unread(self,user=None, feed=None):
         if user:
             user_shared_entries = Entry.objects.filter(
@@ -69,3 +74,10 @@ class UserProfile(models.Model):
             return unread_count 
         else: 
             return None
+    
+def create_user_profile(sender, instance, created, **kwargs):  
+    if created:  
+        profile, created = UserProfile.objects.get_or_create(user=instance)  
+        
+post_save.connect(create_user_profile, sender=User)
+    

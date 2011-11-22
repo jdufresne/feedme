@@ -61,40 +61,12 @@ def home(request):
         bm_initial_url = """javascript:(function(){document.body.appendChild(document.createElement('script')).src='"""
         bm_initial_url += reverse("bookmarklet", args=(user_id,))
         bm_initial_url +="""';})();"""
-        feed_counts = {}
-        for feed_id in Feed.objects.values_list('id', flat=True):
-            print feed_id
-            feed_counts[feed_id] = get_unread(feed_id=feed_id)
-        user_counts = {}
-        for user in User.objects.all():
-            print user.id
-            if user.id != request.user.id:
-                user_counts[user] = get_unread(user_id=user.id)
         
     return render(request, 'feeds/home.html', 
                   {
                    'bm_initial_url':bm_initial_url,
-                   'user_counts':user_counts,
-                   'feed_counts':feed_counts
-                   }
-                  )
-
-def get_unread(feed_id=None, user_id=None):
-    if not user_id:
-        unread_entries = Entry.objects.filter(feed_id=feed_id)
-        unread_count = unread_entries.exclude(userentry__read=True).count()
-    else:
-        user_shared_entries = Entry.objects.filter(userentry__user_id = user_id,
-                                              userentry__shared=True)
-        read_entries_count = user_shared_entries.filter(userentry__user_id = user_id,
-                                                        userentry__read=True
-                                                    ).count()
-                                                        
-        #read_entries_count = Entry.objects.filter( Entry in user_shared_entries, 
-        #                                     
-        unread_count = user_shared_entries.count() - read_entries_count 
-        
-    return unread_count
+                  }
+           )
 
 @login_required
 @require_POST

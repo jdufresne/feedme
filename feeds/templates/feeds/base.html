@@ -28,7 +28,7 @@
     <li class="list-heading">Shares</li>
     <li>
       <ul id="feeds">
-        {% for user in user_counts %}
+        {% for user in user.get_profile().friends %}
           <li>
             <a class="feed" href="{% url user_feed user_id=user.id %}">
               {{ user }}
