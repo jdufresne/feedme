@@ -23,22 +23,7 @@
   <li><a href="{% url home %}">Home</a></li>
   {% if user.is_authenticated %}
     <li>Bookmarked items</li>
-  {% endif %}
-  {% if user.is_authenticated %}
-    <li class="list-heading">Shares</li>
-    <li>
-      <ul id="feeds">
-        {% for user in user.get_profile().friends %}
-          <li>
-            <a class="feed" href="{% url user_feed user_id=user.id %}">
-              {{ user }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </li>
-  {% endif %}
-  
+  {% endif %}  
   {% if user.is_authenticated %}
     <li class="list-heading">Subscriptions</li>
     <li>
