@@ -37,7 +37,6 @@ class Entry(models.Model):
     def __unicode__(self):
         return self.title
 
-
 class UserEntry(models.Model):
     user = models.ForeignKey(User)
     entry = models.ForeignKey('Entry')
@@ -45,3 +44,28 @@ class UserEntry(models.Model):
     bookmarked = models.BooleanField(default=False)
     shared = models.BooleanField(default=False)
 
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, unique=True)
+    
+    def unread(self,user=None, feed=None):
+        if user:
+            user_shared_entries = Entry.objects.filter(
+                                                       userentry__user_id=user.id,
+                                                       userentry__shared=True
+                                                       ).values_list('id',flat=True)
+            
+            unread_count = Entry.objects.filter(
+                                                      id in user_shared_entries,
+                                                      userentry__user_id=self.user.id,
+                                                      userentry__read=True
+                                                    ).count()
+            return unread_count
+        elif feed:
+            unread_entries = Entry.objects.filter(feed_id=feed_id)
+            unread_count = unread_entries.exclude(
+                                                  userentry__user_id=self.user.id,
+                                                  userentry__read=True,
+                                                 ).count()
+            return unread_count 
+        else: 
+            return None

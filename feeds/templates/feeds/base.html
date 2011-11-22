@@ -24,7 +24,21 @@
   {% if user.is_authenticated %}
     <li>Bookmarked items</li>
   {% endif %}
-  <li>Shared items</li>
+  {% if user.is_authenticated %}
+    <li class="list-heading">Shares</li>
+    <li>
+      <ul id="feeds">
+        {% for user in user_counts %}
+          <li>
+            <a class="feed" href="{% url user_feed user_id=user.id %}">
+              {{ user }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+  
   {% if user.is_authenticated %}
     <li class="list-heading">Subscriptions</li>
     <li>

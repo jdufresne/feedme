@@ -11,9 +11,16 @@ from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 
-def feed(request, feed_id, unread=True):
-    feed = get_object_or_404(Feed, pk=feed_id)
-    entries = feed.entries
+def feed(request, feed_id, user_id=None, unread=True):
+    if not user_id:
+        feed = get_object_or_404(Feed, pk=feed_id)
+        entries = feed.entries
+    else:
+        get_user = get_object_or_404(User, pk=user_id) 
+        if not get_user:
+            get_user = request.user
+        entries = Entry.objects.filter(userentry__user=get_user,
+                                        userentry__shared=True)
     if request.user.is_authenticated():
         if unread:
             entries = entries.exclude(userentry__user=request.user,
@@ -41,23 +48,53 @@ def bookmarklet(request, user_id):
                   },content_type="application/javascript"
                   )
 
-def shares(request, unred=True):
-    entries = Entry.objects.filter(userentry__shared=True)
-    if request.user.is_authenticated():
-        entries = entries.exclude(userentry__user=request.user)
-    return render(request, 'feeds/shares.html', {'entries': entries})
+def shares(request, user_id, unred=True):
+    return redirect('feed', user_id=user_id)
 
 
 def home(request):
     bm_initial_url=None
+    user_counts=None
+    feed_counts=None
     if request.user.is_authenticated():
         user_id = request.user.id
         bm_initial_url = """javascript:(function(){document.body.appendChild(document.createElement('script')).src='"""
         bm_initial_url += reverse("bookmarklet", args=(user_id,))
         bm_initial_url +="""';})();"""
-    
-    return render(request, 'feeds/home.html', {'bm_initial_url':bm_initial_url})
+        feed_counts = {}
+        for feed_id in Feed.objects.values_list('id', flat=True):
+            print feed_id
+            feed_counts[feed_id] = get_unread(feed_id=feed_id)
+        user_counts = {}
+        for user in User.objects.all():
+            print user.id
+            if user.id != request.user.id:
+                user_counts[user] = get_unread(user_id=user.id)
+        
+    return render(request, 'feeds/home.html', 
+                  {
+                   'bm_initial_url':bm_initial_url,
+                   'user_counts':user_counts,
+                   'feed_counts':feed_counts
+                   }
+                  )
 
+def get_unread(feed_id=None, user_id=None):
+    if not user_id:
+        unread_entries = Entry.objects.filter(feed_id=feed_id)
+        unread_count = unread_entries.exclude(userentry__read=True).count()
+    else:
+        user_shared_entries = Entry.objects.filter(userentry__user_id = user_id,
+                                              userentry__shared=True)
+        read_entries_count = user_shared_entries.filter(userentry__user_id = user_id,
+                                                        userentry__read=True
+                                                    ).count()
+                                                        
+        #read_entries_count = Entry.objects.filter( Entry in user_shared_entries, 
+        #                                     
+        unread_count = user_shared_entries.count() - read_entries_count 
+        
+    return unread_count
 
 @login_required
 @require_POST
