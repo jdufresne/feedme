@@ -8,7 +8,8 @@ urlpatterns = patterns(
     # General feed views
     url(r'^feed/(?P<feed_id>\d+)/$', 'feed', name='feed'),
     url(r'^feed/(?P<feed_id>\d+)/all/$', 'feed', kwargs={'unread': False}),
-    url(r'^feed/(?P<user_id>\d+)/$', 'feed', name='user_feed'),
+    url(r'^feed/user/(?P<user_id>\d+)/$', 'feed', name='user_feed'),
+    url(r'^shares/$', 'shares', name='shares'),
     url(r'^shares/(?P<user_id>\d+)/$', 'shares', name='shares'),
 
     # User feed views

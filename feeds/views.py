@@ -9,31 +9,37 @@ from feedme.feeds.models import Feed, Entry, UserEntry
 from feedme.feeds.forms import ImportForm
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
 import datetime
 
-def feed(request, feed_id, user_id=None, unread=True):
-    if not user_id:
+def feed(request, feed_id=None, user_id=None, unread=True):
+    if feed_id:
         feed = get_object_or_404(Feed, pk=feed_id)
         entries = feed.entries
-    else:
+        heading = feed.title
+    elif user_id:
         get_user = get_object_or_404(User, pk=user_id) 
         if not get_user:
             get_user = request.user
         entries = Entry.objects.filter(userentry__user=get_user,
                                         userentry__shared=True)
+        heading = get_user.username
+        
     if request.user.is_authenticated():
         if unread:
             entries = entries.exclude(userentry__user=request.user,
                                       userentry__read=True)
-        subscribed = request.user.feeds.filter(pk=feed.id).exists()
+        if feed_id:
+            subscribed = request.user.feeds.filter(pk=feed.id).exists()
+        elif user_id:
+            subscribed = True
     else:
         entries = entries.all()
         subscribed = None
 
     return render(request, 'feeds/feed.html', {
-        'feed': feed,
+        'heading': heading,
         'entries': entries,
-        'subscribed': subscribed,
     })
 
 
@@ -48,8 +54,15 @@ def bookmarklet(request, user_id):
                   },content_type="application/javascript"
                   )
 
-def shares(request, user_id, unred=True):
-    return redirect('feed', user_id=user_id)
+def shares(request, user_id=None, unred=True):
+    if (user_id):
+        return redirect('feed', user_id=user_id)
+    
+    entries = Entry.objects.filter(userentry__shared=True)
+    if request.user.is_authenticated():
+        entries = entries.exclude(userentry__user=request.user)
+    return render(request, 'feeds/shares.html', {'entries': entries})
+    
 
 
 def home(request):
@@ -160,6 +173,7 @@ def import_opml(request):
                     feed.title = el.attrib['text']
                     feed.save()
                 request.user.feeds.add(feed)
+            #refresh_feeds()
             return redirect('home')
     else:
         form = ImportForm()
